@@ -1,0 +1,9 @@
+@import './login';
+
+.register {
+    @extend .login;
+
+    .register-container {
+        @extend .login-container;
+    }
+}

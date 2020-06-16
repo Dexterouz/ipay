@@ -1,0 +1,56 @@
+// message color
+$dark-blue-info: #3385ff;
+$light-blue-info: #cce0ff;
+$dark-green-success: #00b33c;
+$light-green-success: #b3ffcc;
+$dark-red-error: #ff3333;
+$light-red-error: #ffcccc;
+$dark-gold-warning: #ffad33;
+$light-gold-warning: #ffebcc;
+
+// message symbol
+$info-type: "#{'Info!:'}";
+$error-type: "#{'Error⊗:'}";
+$success-type: "#{'Success☑:'} ";
+$warning-type: "#{'Warning⚠:'}";
+
+// $display: false;
+
+@mixin message-shared($txt-bdr-Color, $bgColor, $type, $display: true) {
+    width: auto;
+    @if $display {
+        display: block;
+        @debug "Error in #{$display}";
+    } @else {
+        display: inline-block;
+        @debug "Error in #{$display}";
+    }
+    padding: 15px 0px 15px 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: $txt-bdr-Color;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: $bgColor;
+    border: 1px solid $txt-bdr-Color;
+    border-radius: 5px;
+
+    &::before {
+        content: "#{$type} ";
+        font-weight: bold;
+        font-size: 1.08em;
+    }
+}
+
+    .error {
+        @include message-shared($dark-red-error, $light-red-error, $error-type);
+    }
+    .success {
+        @include message-shared($dark-green-success, $light-green-success, $success-type);
+    }
+    .warning {
+        @include message-shared($dark-gold-warning, $light-gold-warning, $warning-type);
+    }
+    .info {
+        @include message-shared($dark-blue-info, $light-blue-info, $info-type);
+    }

@@ -1,0 +1,243 @@
+* {
+    box-sizing: border-box;
+}
+$black: #000000;
+
+// button styling
+@mixin btn($bg-color, $color, $bdr:false) {
+    color: $color;
+    width: 80px;
+    padding: 8px;
+    border: none;
+    text-align: center;
+    font-weight: bold;
+    background-color: $bg-color;
+    @if($bdr){
+        border-radius: 5px;
+    }
+
+    &:hover{
+        cursor: pointer;
+        background-color: lighten($color: $bg-color, $amount: 5);
+    }
+}
+.dashboard {
+    padding: 10px;
+    border-top: 5px solid $main-color;
+
+    .welcome-header {
+        display: flex;
+        padding: 10px;
+        background-color: $black;
+        color: #fff;
+        opacity: 0.8;
+
+        .welcome {
+            flex-grow: 1;
+        }
+
+        .envelope {
+            flex-grow: 1;
+            font-size: 1.1em;
+            .new-mail {
+                sup{
+                    padding: 3px;
+                    color: #000;
+                    border-radius: 100%;
+                    background-color: #fff;
+                }
+            }
+        }
+
+        .user-name {
+            flex-grow: 1;
+        }
+    }
+
+    .data-info {
+        display: flex;
+        margin: 20px;
+
+        .info {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+            background-color: lighten($color: grey, $amount: 4);
+            flex-grow: 1;
+            .currency {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+
+                .amount {
+                    display: block;
+                    font-weight: bold;
+                    font-family: $font;
+                    font-size: 2.5em;
+                    color: #fff;
+                    align-self: center;
+                }
+
+                img {
+                    align-self: center;
+                    width: 180px;
+                    height: 180px;
+                }
+            }
+
+            .info-desc {
+                align-self: center;
+                font-weight: bold;
+                font-family: $font;
+            }
+        }
+    }
+
+    // transaction 
+    fieldset {
+        padding: 10px;
+        margin: 10px;
+        legend {
+            padding: 5px;
+            color: white;
+            font-weight: bold;
+            background-color: grey;
+        }
+
+        // styling for transaction
+        .transaction-container {
+            display: flex;
+            justify-content: space-between;
+
+            .transaction {
+                padding: 10px;
+                background-color: grey;
+                flex-basis: 45%;
+                box-sizing: border-box;
+                .transaction-title {
+                    text-align: center;
+                    color: white;
+                    font-weight: bold;
+                    font-family: $font;
+                    // border-radius: 5px;
+                    background-color: $black;
+                    padding: 5px;
+                    margin-bottom: 5px;
+                }
+                form {
+                    .form-group {
+                        display: flex;
+                        flex-direction: column;
+                        margin-bottom: 5px;
+                        .form-row {
+                            display: flex;
+                            .row {
+                                flex-grow: 1;
+                                margin-bottom: 5px;
+                                label {
+                                    display: block; 
+                                    font-weight: bold;
+                                    margin-bottom: 5px;
+                                }
+                                input[type=number] {
+                                    width: (198% / 2);
+                                    border: none;
+                                    padding: 8px;
+                                }
+                            }
+                        }
+                        label {
+                            display: block; 
+                            font-weight: bold;
+                            margin-bottom: 5px;
+                        }
+                        input[type=number], input[type=text] {
+                            padding: 10px;
+                            border: none;
+                        }
+                        input[type=submit].purchase{
+                            @include btn(#4CAF50, #fff);
+                        }
+                        input[type=submit].send {
+                            @include btn(#f44336, #fff);
+                        }
+                    }
+                }
+            }
+        }
+        // styling for wallet
+    .wallet-container {
+        display: flex;
+        justify-content: space-between;
+        .wallet-action {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            flex-basis: 30%;
+            background-color: grey;
+            .action-title, .btn-action {
+                align-self: center;
+            }
+            .btn-action{
+                button {
+                    @include btn(#0040ff, #fff, true);
+                }
+            }
+            .action-title {
+                padding: 8px;
+                margin-bottom: 20px;
+                font-family: $font;
+                font-weight: bold;
+                color: #fff;
+                background-color: #000;
+                .status {
+                    padding: 3px;
+                    font-family: $font;
+                    font-size: 13px;
+                    font-weight: normal;
+                    border-radius: 4px;
+                    text-align: center;
+                    background-color: orangered;
+                    color: #fff;
+                }
+            }
+        }
+    }
+     // for mail
+    .mail-container {
+        details {
+            p {
+                padding: 10px 30px;
+                margin: 5px;
+                font-family: $font;
+                border-radius: 5px;
+                background-color: #99b3ff;
+
+                button {
+                    width: 20px;
+                    float: right;
+                    border: none;
+                    font-weight: bold;
+                    color: rgb(95, 91, 91);
+                    background-color: inherit;
+                    font-size: 1.2em;
+                    &:hover {
+                        cursor: pointer;
+                        color: #000;
+                    }
+                }
+            }
+            summary {
+                outline: none;
+                .mail-count {
+                    padding: 8px;
+                    color: white;
+                    font-weight: bold;
+                    background-color: red;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+}
+}
