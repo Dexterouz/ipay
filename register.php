@@ -36,21 +36,11 @@
                         ?>
                         <div class="form-row">
                             <label for="first-name">First Name:</label>
-                            <input type="text" name="f_name" id="f_name" placeholder="Enter your first name"
-                                value= "<?php if (issset($_POST['f_name'])) {
-                                    echo htmlspecialchars($_POST['f_name'], ENT_QUOTES);
-                                }
-                                ?>";
-                            >
+                            <input type="text" name="f_name" id="f_name" placeholder="Enter your first name">
                         </div>
                         <div class="form-row">
                             <label for="last-name">Last Name:</label>
-                            <input type="text" name="l_name" id="l_name" placeholder="Enter your last name"
-                                value="<?php if (isset($_POST['l_name'])) {
-                                    echo htmlspecialchars($_POST['l_name'], ENT_QUOTES);
-                                }
-                                ?>";
-                            >
+                            <input type="text" name="l_name" id="l_name" placeholder="Enter your last name">
                         </div>
                         <div class="form-row">
                             <label for="email">Email:</label>
@@ -58,7 +48,7 @@
                                 value="<?php if (isset($_POST['email'])) {
                                     echo htmlspecialchars($_POST['email']);
                                 }
-                                ?>";
+                                ?>"
                             >
                         </div>
                         <div class="form-row">
@@ -67,7 +57,7 @@
                                 value="<?php if (isset($_POST['password'])) {
                                     echo htmlspecialchars($_POST['password']);
                                 }
-                                ?>";
+                                ?>"
                             >
                         </div>
                         <div class="form-row">
@@ -80,14 +70,14 @@
                                 value="<?php if (isset($_POST['phone_no'])) {
                                     echo htmlspecialchars($_POST['phone_no'], ENT_QUOTES);
                                 }
-                                ?>";
+                                ?>"
                             >
                         </div>
                         <div class="form-row">
                             <input type="submit" name="submit" id="submit" value="Submit">
                         </div>
                         <div class="form-row">
-                            <p class="not">Already Registered? Click <a href="login.html">Here</a> to login</p>
+                            <p class="not">Already Registered? Click <a href="login.php">Here</a> to login</p>
                         </div>
                     </form>
                 </div>

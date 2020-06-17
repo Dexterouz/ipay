@@ -83,7 +83,7 @@
             $check_user_result = mysqli_stmt_get_result($query_stmt);
 
             // if there exist no record, insert records in users table
-            if (mysqli_stmt_num_rows($query_stmt) == 1) {
+            if (mysqli_stmt_num_rows($query_stmt) > 0) {
 
                 // first of all hash the password
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
@@ -116,7 +116,7 @@
                     echo "<p>".mysqli_error($conn)."<br/><br/>Query: ".$insert_rec_sql."</p>";
                 }
             } else {
-                $errors[] = "User already exist";
+                $errors[] = "User's Email already in use";
             }
             // Close connection to database
             mysqli_close($conn);
@@ -135,7 +135,8 @@
             $error_string = $date . " | Registeration | "."{$e->getMessage()} | "."{$e->getLine()}";
             error_log($error_string, 3, "/logs/error_log.log");
         }
-        
+    } else {
+        // return error messages(s)
         return $errors;
     }
 ?>
