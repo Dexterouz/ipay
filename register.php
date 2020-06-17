@@ -1,3 +1,4 @@
+<?php $menu = 5; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
