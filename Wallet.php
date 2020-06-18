@@ -2,18 +2,25 @@
     class Wallet
     {
         // declare the properties
+        public $connect;
         public $wallet_address;
         public $fiat = 10;
         public $coin = 1;
         public $amount; 
-        
+
+        public function __construct()
+        {
+            $conn = new mysqli("localhost", "root", "", "ipay_db");
+            $this->connect = $conn;
+        }
+
         // method 'walletBal()'
         public function walletBal($user_id)
         {
-            require 'DBConnection/mysqli_connect.php';
+            // require 'DBConnection/mysqli_connect.php';
             $wallet_sql = "SELECT wallet_balance FROM wallet WHERE user_id=?";
             // create prepare statement
-            $wallet_stmt = $conn->prepare($wallet_sql);
+            $wallet_stmt = $this->connect->prepare($wallet_sql);
             if (isset($wallet_stmt)) {
             // bind parameters to identifiers
             $wallet_stmt->bind_param('i', $user_id);
@@ -60,10 +67,33 @@
             $wallet_bal_fiat = ($wallet_bal_coin * $this->fiat); // equivalent in Naira; 1coin = 10 naira
 
             // store the out in array
-            $wallet_bal_output = array('bal_coin' => $wallet_bal_coin, 'bal_fiat' => $wallet_bal_fiat);
+            $wallet_bal_output = array(
+                'bal_coin' => $wallet_bal_coin,
+                'bal_fiat' => $wallet_bal_fiat,
+                'plan_type' => 'none'
+            );
         }
 
         return $wallet_bal_output;
     } // end of method walletBal()
+
+    // method retrieve walletAddr()
+    public function walletAddr($user_id)
+    {
+        // retrieve the wallet adress
+        $wallet_sql = "SELECT wallet_addr FROM wallet WHERE user_id=?";
+        $wallet_stmt = $this->connect->prepare($wallet_sql);
+
+        if (isset($wallet_stmt)) {
+            $wallet_stmt->bind_param('i', $user_id);
+            $wallet_stmt->execute();
+            $result = $wallet_stmt->get_result();
+            $row = $result->fetch_assoc();
+            $wallet_addr = $row['wallet_addr'];
+        } else {
+            $wallet_addr = '';
+        }
+        return $wallet_addr;
+    }
 }
 ?>
