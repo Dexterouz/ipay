@@ -42,6 +42,35 @@ $warning-type: "#{'Warning⚠:'}";
     }
 }
 
+@mixin message-shared-sm($txt-bdr-Color, $bgColor, $type) {
+    padding:5px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: $bgColor;
+    color: $txt-bdr-Color;
+    border: 1px solid $txt-bdr-Color;
+    display:block; 
+    border-radius: 3px;
+
+    &::before {
+        content: "#{$type} ";
+        font-weight: bold;
+        font-size: normal;
+    }
+}
+
+    .error-sm {
+        @include message-shared-sm($dark-red-error, $light-red-error, $error-type);
+    }
+    .success-sm {
+        @include message-shared-sm($dark-green-success, $light-green-success, $success-type);
+    }
+    .warning-sm {
+        @include message-shared-sm($dark-gold-warning, $light-gold-warning, $warning-type);
+    }
+    .info-sm {
+        @include message-shared-sm($dark-blue-info, $light-blue-info, $info-type);
+    }
+
     .error {
         @include message-shared($dark-red-error, $light-red-error, $error-type);
     }
