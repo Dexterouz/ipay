@@ -75,6 +75,9 @@
         }
 
         return $wallet_bal_output;
+
+        // close connection to database
+        $wallet_stmt->close();
     } // end of method walletBal()
 
     // method retrieve walletAddr()
@@ -93,13 +96,56 @@
             $wallet_row = '';
         }
         return $wallet_row;
+
+        // close connection to database
+        $wallet_stmt->close();
+    }
+
+    // method 'sendTransactionReport()'
+    public function sendTransactionReport($wallet_report, $wallet_id, $user_id)
+    {
+        // get the user wallet id
+        $get_wallet_id = $this->walletRec($user_id);
+        // write the query for inserting report
+        $wallet_report_sql = "INSERT INTO wallet_mail (wallet_mails, wallet_id, user_id) VALUES ";
+        $wallet_report_sql .= "(?, ?, ?)";
+        // prepare the statement
+        $stmt = $this->connect->prepare($wallet_report_sql);
+        if (isset($stmt)) {
+            // bind parameter to identifier
+        $stmt->bind_param('sii', $wallet_report, $wallet_id, $user_id);
+        // execute the statement
+        $stmt->execute();
+
+        // set the date time zone
+        date_default_timezone_set('Africa/lagos');
+
+        // if the report has been inserted
+        // send logs to error log
+        if ($stmt->affected_rows == 1) {
+            $date = date('m:d:Y h:i:sa');
+            $errorstring = $date." | transaction report sent |";
+            error_log($errorstring, 3, "logs/error_log.log");
+            } else {
+                $date = date('m:d:Y h:i:sa');
+                $errorstring = $date." | Error in sending transaction report |";
+                error_log($errorstring, 3, "logs/error_log.log");
+            }
+        } else {
+            $date = date('m:d:Y h:i:sa');
+            $errorstring = $date." | Error in sending transaction report |";
+            error_log($errorstring, 3, "logs/error_log.log");
+        }
+
+        // close connection to database
+        $stmt->close();
     }
 
       // method 'purchaseCoin()'
     public function purchaseCoin($purch_amount, $wallet_addr, $user_id)
     {
         // get the current balance of the wallet
-        $wallet_cur_bal = $this->walletRec(2);
+        $wallet_rec = $this->walletRec($user_id);
 
         // declare report message variable
         $errors = array(); # for error message(s)
@@ -121,7 +167,7 @@
         // update the current balance
         // with the requested purchase amount
         if (empty($errors)) {
-            $purch_amount_sql = "UPDATE wallet SET wallet_balance = ".(($wallet_cur_bal['wallet_balance']) + (floatval($get_purch_amount)))." ";
+            $purch_amount_sql = "UPDATE wallet SET wallet_balance = ".(($wallet_rec['wallet_balance']) + (floatval($get_purch_amount)))." ";
             $purch_amount_sql .= "WHERE wallet_addr=? AND user_id=?";
             // prepare the statement
             $stmt = $this->connect->prepare($purch_amount_sql);
@@ -134,6 +180,10 @@
             $result = $stmt->get_result();
             if ($stmt->affected_rows == 1) {
                 $success[] = "Your purchase of {$get_purch_amount} coin is successful";
+
+                $report_message = "You purchased {$get_purch_amount} coin on ".date('m:d:Y h:i:sa');
+                // send the report of the transaction to the transaction report table
+                $this->sendTransactionReport($report_message, $wallet_rec['wallet_id'], $user_id);
             } else {
                 $errors[] = "Error in Transaction";
             }
@@ -141,6 +191,8 @@
             $errors[] = "Error in Transaction";
         }
         $errors;
+        // close database connection
+        $stmt->close();
     } // End of if(empty($errors))
 
         // store messages in array and return the array
