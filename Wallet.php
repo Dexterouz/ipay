@@ -141,6 +141,28 @@
         $stmt->close();
     }
 
+    // method 'receiver_addr()'
+    function receiver_addr($recvr_addr)
+    {
+        $recvr_addr_sql = "SELECT wallet_addr FROM wallet WHERE wallet_addr=?";
+        // prepare the statment
+        $stmt = $this->connect->prepare($recvr_addr_sql);
+        if (isset($stmt)) {
+            // bind parameter to identifier
+            $stmt->bind_param('s', $recvr_addr);
+            // execute the statement
+            $stmt->execute();
+            // get the result of the excution
+            $result = $stmt->get_result();
+            // fetch the result in an array
+            $result_row = $result->fetch_assoc();
+        }
+        // close connection to database
+        $stmt->close();
+        // return the result
+        return $result_row;
+    }
+
       // method 'purchaseCoin()'
     public function purchaseCoin($purch_amount, $wallet_addr, $user_id)
     {
