@@ -126,14 +126,14 @@
             date_default_timezone_set('Africa/lagos');
             $date = date('m:d:Y h:i:sa');
             $error_string = $date . " | Registeration | "."{$e->getMessage()} | "."{$e->getLine()}";
-            error_log($error_string, 3, "/logs/exception_log.log");
+            error_log($error_string, 3, "logs/exception_log.log");
         } catch (Error $e) {
             print "An Error has occurred ".$e->getMessage();
             print "The System is busy, please try again later.";
             date_default_timezone_set('Africa/lagos');
             $date = date('m:d:Y h:i:sa');
             $error_string = $date . " | Registeration | "."{$e->getMessage()} | "."{$e->getLine()}";
-            error_log($error_string, 3, "/logs/error_log.log");
+            error_log($error_string, 3, "logs/error_log.log");
         }
     } else {
         // return error messages(s)
