@@ -439,6 +439,8 @@
                 // send report of transaction
                 $report_message = "You claimed your registeration bonus of {$bonus} DXcoin on ".(date('m/d/Y h:i:sa')).", your new balance is {$wallet_rec} Dxcoin";
                 $this->sendTransactionReport($report_message, $wallet_id, $user_id);
+                // refresh the page
+                header("Location: ".$_SERVER['PHP_SELF']);
             } else {
                 $errors[] = "There is an error";
                 date_default_timezone_set('Africa/lagos');
@@ -449,7 +451,63 @@
         } else {
             $errors[] = "There is an error";
         }
+        // close connection to database
+        $stmt->close();
+
         // return the messages
+        $messages = array('error' => $errors, 'success' => $success);
+        return $messages;
+    }
+
+    // method 'retrieveTransactionReport()'
+    public function retrieveTransReport($wallet_id, $wallet_mail_id)
+    {
+        // report retrieving query
+        $retrieve_sql = "SELECT wallet_mail_id, wallet_mails, wallet_id FROM wallet_mail WHERE wallet_mail_id=? AND wallet_id=?";
+        // prepare the statement
+        $stmt = $this->connect->prepare($retrieve_sql);
+        if (isset($stmt)) {
+            // bind parameter to identifier
+            $stmt->bind_param('ii', $wallet_mail_id, $wallet_id);
+            // execute the statement
+            $stmt->execute();
+            // get the result of the excution
+            $result = $stmt->get_result();
+            // fetch the result in an associative array
+            $row_result = $result->fetch_assoc();
+        }
+        // close connection to database
+        $stmt->close();
+        // return result
+        return $row_result;
+    }
+
+    // method 'retrieveTransactionReport()'
+    public function deleteTransReport($wallet_id, $wallet_mail_id)
+    {
+        // delete report messages
+        $errors = $success = array();
+
+        // report retrieving query
+        $delete_sql = "DELETE FROM wallet_mail WHERE wallet_mail_id=? AND wallet_id=?";
+        // prepare the statement
+        $stmt = $this->connect->prepare($delete_sql);
+        if (isset($stmt)) {
+            // bind parameter to identifier
+            $stmt->bind_param('ii', $wallet_mail_id, $wallet_id);
+            // execute the statement
+            $stmt->execute();
+            if ($stmt->affected_rows == 1) {
+                $success[] = "Report deleted!";
+            } else {
+                $errors[] = "Report could not be deleted";
+            }
+        } else {
+            $errors[] = "Error in deleting report";
+        }
+        // close connection to database
+        $stmt->close();
+        // return result
         $messages = array('error' => $errors, 'success' => $success);
         return $messages;
     }
