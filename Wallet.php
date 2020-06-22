@@ -243,8 +243,6 @@
         $get_recvr_wal_id = $get_recvr_wal_rec['wallet_id'];
         // get receiver wallet balance
         $get_recvr_wal_bal = $get_recvr_wal_rec['wallet_balance'];
-        // get receiver wallet address
-        $get_recvr_addr = $get_recvr_wal_rec['wallet_addr'];
         // get receiver's user name
         $get_recvr_uname = $get_recvr_wal_rec['wallet_name'];
 
@@ -260,10 +258,10 @@
         }
 
         // validate the receiver's address
-        // $get_recvr_addr = htmlspecialchars($receiver_addr, ENT_QUOTES);
-        // if (empty($get_recvr_addr)) {
-        //     $errors[] = "Enter receiver wallet address";
-        // }
+        $get_recvr_addr = htmlspecialchars($receiver_addr, ENT_QUOTES);
+        if (empty($get_recvr_addr)) {
+            $errors[] = "Enter receiver wallet address";
+        }
 
         if (empty($errors)) {
             // check if the sending amount is greater than
@@ -408,6 +406,51 @@
             }
         }
         // return the messages
+        return $messages;
+    }
+
+    // method 'claimBonus()'
+    public function claimBonus($user_id)
+    {
+        // error/success variable
+        $errors = $success = array();
+
+        // get the wallet current balance
+        $wallet_rec = $this->walletRec($user_id);
+        $wallet_bal = $wallet_rec['wallet_balance'];
+        $wallet_id = $wallet_rec['wallet_id'];
+
+        // declare the bonus amount
+        $bonus = 10.0;
+
+        if (isset($user_id)) {
+            // write the query to update the user's wallet balance
+            $bonus_sql = "UPDATE wallet SET wallet_balance= ".($wallet_bal + $bonus)." WHERE user_id=?";
+            // prepare the statement
+            $stmt = $this->connect->prepare($bonus_sql);
+            // bind parameter to identifier
+            $stmt->bind_param('i', $user_id);
+            // execute the statement
+            $stmt->execute();
+            // if row is updated
+            if ($stmt->affected_rows == 1) {
+                $success[] = "You have claimed your bonus";
+                date_default_timezone_set('Africa/lagos');
+                // send report of transaction
+                $report_message = "You claimed your registeration bonus of {$bonus} DXcoin on ".(date('m/d/Y h:i:sa')).", your new balance is {$wallet_rec} Dxcoin";
+                $this->sendTransactionReport($report_message, $wallet_id, $user_id);
+            } else {
+                $errors[] = "There is an error";
+                date_default_timezone_set('Africa/lagos');
+                $date = date('m:d:Y h:i:sa');
+                $error_string = $date . " | Claim Bonus Error | \n";
+                error_log($error_string, 3, "logs/error_log.log");
+            }
+        } else {
+            $errors[] = "There is an error";
+        }
+        // return the messages
+        $messages = array('error' => $errors, 'success' => $success);
         return $messages;
     }
 }
