@@ -328,5 +328,87 @@
         $messages = array('errors' => $errors, 'success' => $success);
         return $messages;
     }
+
+    // method 'generateWallet()'
+    public function generateWallet($user_name, $user_addr, $user_id) {
+        // variable to hold error(s)
+        $errors = array();
+        $success = array();
+
+        // validate the user input from the form
+
+        // validate first name
+        $wal_usr_name = trim($user_name);
+        if (empty($wal_usr_name)) {
+            $errors[] = "Please specify your wallet user name";
+        } else {
+            $wal_usr_name = (filter_var($wal_usr_name, FILTER_SANITIZE_STRING));
+        }
+
+        // validate last name
+        $wal_usr_address = trim($user_addr);
+        if (empty($wal_usr_address)) {
+            $errors[] = "Please generate your wallet address by clicking the green button";
+        } else {
+            $wal_usr_address = (filter_var($wal_usr_address, FILTER_SANITIZE_STRING));
+        }
+
+        // set wallet accont status default as pending
+        $account_status = "active";
+
+        // set registeration bonus
+        $initial_balance = 0.0;
+
+        // if everything is OK
+        if (empty($errors)) {
+            // proceed to insert record in to database
+            try {
+                // insert query
+                $wallet_sql = "INSERT INTO wallet (wallet_name, wallet_addr, wallet_balance, wallet_acct_status, user_id) ";
+                $wallet_sql .= "VALUES (?, ?, ?, ?, ?)";
+                // create prepare statement
+                $stmt = $this->connect->prepare($wallet_sql);
+                // bind parameters to identifier
+                $stmt->bind_param("ssisi", $user_name, $user_addr, $initial_balance, $account_status, $user_id);
+                // execute the statement
+                $stmt->execute();
+                // check if record has been inserted
+                if ($stmt->affected_rows == 1) {
+                    $success[] = "Wallet created successfully!";
+                    // generate report message
+                    $wallet_rec = $this->walletRec($user_id);
+                    // start the session
+                    session_start();
+                    // store the active status of the wallet in a session variable
+                    $_SESSION['wallet_act_status'] = $wallet_rec['wallet_acct_status'];
+                    // report message string
+                    $report_message = "Creation of your wallet account on ".(date('m/d/Y h:i:sa'))." was successfull";
+                    $this->sendTransactionReport($report_message, $wallet_rec['wallet_id'], $user_id);
+                } else {
+                    $errors[] = "Wallet creation failed! due to system error. We will rectify it asap";
+                }
+                // store error/success message in assoc array
+                $messages = array('error' => $errors, 'success' => $success);
+                // close connection to database
+                $stmt->close();
+            } catch (Exception $e) {
+                print "An Exception has occurred ".$e->getMessage();
+                print "The System is busy, please try again later.";
+                date_default_timezone_set('Africa/lagos');
+                $date = date('m:d:Y h:i:sa');
+                $error_string = $date . " | Wallet creation | "."{$e->getMessage()} | "."{$e->getLine()} | "."{$e->getFile()}\n";
+                error_log($error_string, 3, "logs/exception_log.log");  
+            } catch (Error $e) {
+                print "An Error has occurred ".$e->getMessage();
+                print "The System is busy, please try again later.";
+                date_default_timezone_set('Africa/lagos');
+                $date = date('m:d:Y h:i:sa');
+                $error_string = $date . " | Wallet creation | "."{$e->getMessage()} | "."{$e->getLine()} | "."{$e->getFile()}\n";
+                error_log($error_string, 3, "logs/error_log.log");
+            }
+        }
+        // return the messages
+        return $messages;
+    }
 }
 ?>
