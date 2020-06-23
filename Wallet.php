@@ -95,10 +95,10 @@
         } else {
             $wallet_row = '';
         }
-        return $wallet_row;
 
         // close connection to database
         $wallet_stmt->close();
+        return $wallet_row;
     }
 
     // method 'sendTransactionReport()'
@@ -414,7 +414,9 @@
     {
         // error/success variable
         $errors = $success = array();
-
+        // set bonus claimed status to false; 
+        // showing bonus has not been claimed
+        $bonus_claimed_status = false;
         // get the wallet current balance
         $wallet_rec = $this->walletRec($user_id);
         $wallet_bal = $wallet_rec['wallet_balance'];
@@ -434,6 +436,7 @@
             $stmt->execute();
             // if row is updated
             if ($stmt->affected_rows == 1) {
+                $bonus_claimed_status = true;
                 $success[] = "You have claimed your bonus";
                 date_default_timezone_set('Africa/lagos');
                 // send report of transaction
@@ -455,7 +458,10 @@
         $stmt->close();
 
         // return the messages
-        $messages = array('error' => $errors, 'success' => $success);
+        $messages = array(
+            'error' => $errors,
+            'success' => $success, 
+            'bonus_status' => $bonus_claimed_status);
         return $messages;
     }
 
