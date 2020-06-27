@@ -202,6 +202,8 @@
             // get the result of the statement execution
             $result = $stmt->get_result();
             if ($stmt->affected_rows == 1) {
+                // set defaul timezone
+                date_default_timezone_set("Africa/lagos");
                 $success[] = "Your purchase of {$get_purch_amount} DXcoin was successful";
 
                 $report_message = "You purchased {$get_purch_amount} DXcoin on ".date('m:d:Y h:i:sa').", your new balance is ".(($wallet_rec['wallet_balance']) + (floatval($get_purch_amount)))." DXcoin";
