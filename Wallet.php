@@ -60,7 +60,7 @@
                 'bal_fiat' => $wallet_bal_fiat,
                 'plan_type' => $plan_type
             );
-        } else {
+            } else {
             // if in the event the wallet is not active
             // or not created yet; display zero balance
             $wallet_bal_coin = 0; // balance in coin
@@ -96,9 +96,10 @@
             $wallet_row = '';
         }
 
+        
+        return $wallet_row;
         // close connection to database
         $wallet_stmt->close();
-        return $wallet_row;
     }
 
     // method 'sendTransactionReport()'
@@ -157,10 +158,10 @@
             // fetch the result in an array
             $result_row = $result->fetch_assoc();
         }
-        // close connection to database
-        $stmt->close();
         // return the result
         return $result_row;
+        // close connection to database
+        $stmt->close();
     }
 
       // method 'purchaseCoin()'
@@ -203,28 +204,26 @@
             if ($stmt->affected_rows == 1) {
                 $success[] = "Your purchase of {$get_purch_amount} DXcoin was successful";
 
-                $report_message = "You purchased {$get_purch_amount} DXcoin on ".date('m:d:Y h:i:sa').", your new balance is ".$wallet_rec['wallet_balance']." DXcoin";
+                $report_message = "You purchased {$get_purch_amount} DXcoin on ".date('m:d:Y h:i:sa').", your new balance is ".(($wallet_rec['wallet_balance']) + (floatval($get_purch_amount)))." DXcoin";
                 // send the report of the transaction to the transaction report table
                 $this->sendTransactionReport($report_message, $wallet_rec['wallet_id'], $user_id);
             } else {
                 $errors[] = "Error in Transaction";
             }
-        } else {
-            $errors[] = "Error in Transaction";
-        }
-        $errors;
+        } // End of if(empty($errors))   
+
         // close database connection
         $stmt->close();
-    } // End of if(empty($errors))
-
-        // store messages in array and return the array
-        $messages = array('errors' => $errors, 'success' => $success);
-        return $messages;
-    }
+    } 
+    // store messages in array and return the array
+    $messages = array('errors' => $errors, 'success' => $success);
+    return $messages;
+}
 
     // method 'sendCoin()'
     public function sendCoin($sendr_amount, $receiver_addr, $sendr_user_id)
     {
+        date_default_timezone_set("Africa/lagos");
         // get sender wallet balance
         $get_sendr_wal_rec = $this->walletRec($sendr_user_id);
         // get sender wallet id
@@ -283,11 +282,11 @@
 
                     // if the update is successful
                     // print success message; else print error message
-                    if ($stmt->affected_rows) {
+                    if ($stmt->affected_rows == 1) {
                         // display transfer success message
                         $success[] = "Transfer of {$get_sendr_amount} DXcoin to {$get_recvr_uname} was successful";
 
-                        $report_message = "You received {$get_sendr_amount} DXcoin from {$get_sendr_wal_name} on ".date('m:d:Y h:i:sa').", your new balance is ".($get_sendr_wal_bal)." DXcoin";
+                        $report_message = "You received {$get_sendr_amount} DXcoin from {$get_sendr_wal_name} on ".date('m:d:Y h:i:sa').", your new balance is ".(($get_recvr_wal_bal) + ($get_sendr_amount))." DXcoin";
                         // send the report of the transaction to the transaction report table
                         $this->sendTransactionReport($report_message, $get_recvr_wal_id, $get_recvr_wal_usrid);
 
@@ -304,7 +303,7 @@
                             $stmt->execute();
                             // check if row has been affected
                             if ($stmt->affected_rows) {
-                                $report_message = "You transfered {$get_sendr_amount} DXcoin to {$get_recvr_uname} on ".date('m:d:Y h:i:sa').", your new balance is ".($get_sendr_wal_bal)." DXcoin";
+                                $report_message = "You transfered {$get_sendr_amount} DXcoin to {$get_recvr_uname} on ".date('m:d:Y h:i:sa').", your new balance is ".(($get_sendr_wal_bal) - ($get_sendr_amount))." DXcoin";
                                 // send the report of the transaction to the transaction report table
                                 $this->sendTransactionReport($report_message, $get_sendr_wal_id, $sendr_user_id);
                             }
@@ -375,18 +374,13 @@
                     $success[] = "Wallet created successfully!";
                     // generate report message
                     $wallet_rec = $this->walletRec($user_id);
-                    // start the session
-                    session_start();
-                    // store the active status of the wallet in a session variable
-                    $_SESSION['wallet_act_status'] = $wallet_rec['wallet_acct_status'];
+                    date_default_timezone_set('Africa/lagos');
                     // report message string
                     $report_message = "Creation of your wallet account on ".(date('m/d/Y h:i:sa'))." was successfull";
                     $this->sendTransactionReport($report_message, $wallet_rec['wallet_id'], $user_id);
                 } else {
                     $errors[] = "Wallet creation failed! due to system error. We will rectify it asap";
                 }
-                // store error/success message in assoc array
-                $messages = array('error' => $errors, 'success' => $success);
                 // close connection to database
                 $stmt->close();
             } catch (Exception $e) {
@@ -405,8 +399,10 @@
                 error_log($error_string, 3, "logs/error_log.log");
             }
         }
-        // return the messages
-        return $messages;
+            // store error/success message in assoc array
+            $messages = array('error' => $errors, 'success' => $success);
+            // return the messages
+            return $messages;
     }
 
     // method 'claimBonus()'
@@ -414,9 +410,6 @@
     {
         // error/success variable
         $errors = $success = array();
-        // set bonus claimed status to false; 
-        // showing bonus has not been claimed
-        $bonus_claimed_status = false;
         // get the wallet current balance
         $wallet_rec = $this->walletRec($user_id);
         $wallet_bal = $wallet_rec['wallet_balance'];
@@ -424,83 +417,115 @@
 
         // declare the bonus amount
         $bonus = 10.0;
-
-        if (isset($user_id)) {
+        // change bonus status
+        $bonus_status = 'yes';
+        try{
             // write the query to update the user's wallet balance
-            $bonus_sql = "UPDATE wallet SET wallet_balance= ".($wallet_bal + $bonus)." WHERE user_id=?";
+            $bonus_sql = "UPDATE wallet SET wallet_balance= ".($wallet_bal + $bonus).", bonus_status = '$bonus_status' WHERE user_id=?";
             // prepare the statement
             $stmt = $this->connect->prepare($bonus_sql);
-            // bind parameter to identifier
-            $stmt->bind_param('i', $user_id);
-            // execute the statement
-            $stmt->execute();
-            // if row is updated
-            if ($stmt->affected_rows == 1) {
-                $bonus_claimed_status = true;
-                $success[] = "You have claimed your bonus";
-                date_default_timezone_set('Africa/lagos');
-                // send report of transaction
-                $report_message = "You claimed your registeration bonus of {$bonus} DXcoin on ".(date('m/d/Y h:i:sa')).", your new balance is {$wallet_rec} Dxcoin";
-                $this->sendTransactionReport($report_message, $wallet_id, $user_id);
-                // refresh the page
-                header("Location: ".$_SERVER['PHP_SELF']);
-            } else {
-                $errors[] = "There is an error";
-                date_default_timezone_set('Africa/lagos');
-                $date = date('m:d:Y h:i:sa');
-                $error_string = $date . " | Claim Bonus Error | \n";
-                error_log($error_string, 3, "logs/error_log.log");
+            if (isset($stmt)) {
+                // bind parameter to identifier
+                $stmt->bind_param('i', $user_id);
+                // execute the statement
+                $stmt->execute();
+                // if row is updated
+                if ($stmt->affected_rows == 1) {
+                    $success[] = "You have claimed your bonus";
+                    date_default_timezone_set('Africa/lagos');
+                    // send report of transaction
+                    $report_message = "You claimed your registeration bonus of {$bonus} DXcoin on ".(date('m/d/Y h:i:sa')).", your new balance is ".($wallet_bal + $bonus)." Dxcoin";
+                    $this->sendTransactionReport($report_message, $wallet_id, $user_id);
+                } else {
+                    $errors[] = "You wallet is pending";
             }
-        } else {
-            $errors[] = "There is an error";
         }
+    } catch (Exception $e) {
+        print "An Exception has occured: ".$e->getMessage();
+        date_default_timezone_set('Africa/lagos');
+        $date = date('m:d:Y h:i:sa');
+        $error_string = $date . " | Claim Bonus Exception | {$e->getMessage()} | {$e->getLine()}\n";
+        error_log($error_string, 3, "logs/exception_log.log");
+    } catch (Error $e) {
+        print "An Error has occured ".$e->getMessage();
+        date_default_timezone_set('Africa/lagos');
+        $date = date('m:d:Y h:i:sa');
+        $error_string = $date . " | Claim Bonus Error | {$e->getMessage()} | {$e->getLine()}\n";
+        error_log($error_string, 3, "logs/error_log.log");
+    }
         // close connection to database
-        $stmt->close();
+        // $stmt->close();
 
         // return the messages
         $messages = array(
             'error' => $errors,
-            'success' => $success, 
-            'bonus_status' => $bonus_claimed_status);
+            'success' => $success 
+            );
         return $messages;
+}
+
+    // method 'wallet_mail_rec()'
+    public function wallet_mail_rec($wallet_id) {
+        // retrieve the wallet adress
+        $wallet_sql = "SELECT * FROM wallet WHERE user_id=?";
+        $wallet_stmt = $this->connect->prepare($wallet_sql);
+
+        if (isset($wallet_stmt)) {
+            $wallet_stmt->bind_param('i', $user_id);
+            $wallet_stmt->execute();
+            $result = $wallet_stmt->get_result();
+            $wallet_row = $result->fetch_assoc();
+        } else {
+            $wallet_row = '';
+        }
+
+        
+        return $wallet_row;
+        // close connection to database
+        $wallet_stmt->close();
     }
 
     // method 'retrieveTransactionReport()'
-    public function retrieveTransReport($wallet_id, $wallet_mail_id)
+    public function retrieveTransReport($wallet_id)
     {
         // report retrieving query
-        $retrieve_sql = "SELECT wallet_mail_id, wallet_mails, wallet_id FROM wallet_mail WHERE wallet_mail_id=? AND wallet_id=?";
+        $retrieve_sql = "SELECT wallet_mail_id, wallet_mails, wallet_id FROM wallet_mail WHERE wallet_id=? ORDER BY wallet_mail_id DESC";
         // prepare the statement
         $stmt = $this->connect->prepare($retrieve_sql);
         if (isset($stmt)) {
             // bind parameter to identifier
-            $stmt->bind_param('ii', $wallet_mail_id, $wallet_id);
+            $stmt->bind_param('i', $wallet_id);
             // execute the statement
             $stmt->execute();
             // get the result of the excution
             $result = $stmt->get_result();
             // fetch the result in an associative array
-            $row_result = $result->fetch_assoc();
+            while($row_result = $result->fetch_assoc()) {
+                $row[] = $row_result;
+            }
         }
+        if (isset($row)) {
+            // return result
+            return $row;
+        }
+
         // close connection to database
         $stmt->close();
-        // return result
-        return $row_result;
     }
 
     // method 'retrieveTransactionReport()'
-    public function deleteTransReport($wallet_id, $wallet_mail_id)
+    public function deleteTransReport($wallet_mail_id)
     {
         // delete report messages
         $errors = $success = array();
 
         // report retrieving query
-        $delete_sql = "DELETE FROM wallet_mail WHERE wallet_mail_id=? AND wallet_id=?";
+        $delete_sql = "DELETE FROM wallet_mail WHERE wallet_mail_id=?";
         // prepare the statement
         $stmt = $this->connect->prepare($delete_sql);
         if (isset($stmt)) {
             // bind parameter to identifier
-            $stmt->bind_param('ii', $wallet_mail_id, $wallet_id);
+            $stmt->bind_param('i', $wallet_mail_id);
             // execute the statement
             $stmt->execute();
             if ($stmt->affected_rows == 1) {
