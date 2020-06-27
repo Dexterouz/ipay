@@ -56,7 +56,7 @@
     $user_referrer_id = substr(uniqid('ref'),0,20);
 
     // to generate email confirmation id
-    $user_email_conf_id = substr(uniqid(md5('dexterouskc@yahoo.com')),4,60);
+    $user_email_conf_id = substr(uniqid(md5($email)),4,60);
 
     // set accont status default as pending
     $account_status = "pending";
@@ -80,11 +80,11 @@
             // execute the statment
             mysqli_stmt_execute($query_stmt);
             // get the result of the execution
-            $check_user_result = mysqli_stmt_get_result($query_stmt);
-
+            $result = mysqli_stmt_get_result($query_stmt);
             // if there exist no record, insert records in users table
-            if (mysqli_stmt_num_rows($query_stmt) > 0) {
-
+            if (mysqli_num_rows($result) > 0) {
+                $errors[] = "Email already in use";
+            } else {
                 // first of all hash the password
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -101,22 +101,27 @@
                                         $user_referrer_id, $user_email_conf_id, $account_status);
                 // execute the statement
                 mysqli_stmt_execute($insert_rec_stmt);
-                
+
                 // check if the rows are affected
                 // if true, redirect to message page
                 // if false, report error
                 if (mysqli_stmt_affected_rows($insert_rec_stmt) == 1) {
                     // report success message
                     $success[] = "<b>Registeration Successful!</b><br/> Please confirm your email by clicking the link on your mailbox";
+                    // process the email to be sent to the user
+                        $recipient = $email;
+                        $subject = 'Email Verification';
+                        $message = 'Welcome '.$f_name.' '.$l_name.' to iPay investment platform, please find below for your login credential ';
+                        $message .= 'Email: '.$email.'  Password: '.$password;
+                        $message .= 'Please click on this link localhost/ipay/verify.php?email='.$email.'&hash='.$user_email_conf_id.' to verify your email address';
+                        $message = wordwrap($message, 70, "\r\n");
+                        $headers = 'From: admin@ipay.com.ng'."\r\n".'Reply-To: admin@ipay.com.ng'."\r\n";
+                        // send mail
+                        $send = mail($recipient, $subject, $message, $headers);
                 } else {
                     // report error message
                     $errors[] = "<b>Registeration Fail!</br> due to system error, we apologise for the incovenience";
-
-                    // report error for debugging
-                    echo "<p>".mysqli_error($conn)."<br/><br/>Query: ".$insert_rec_sql."</p>";
                 }
-            } else {
-                $errors[] = "User's Email already in use";
             }
             // Close connection to database
             mysqli_close($conn);
