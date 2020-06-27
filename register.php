@@ -45,21 +45,11 @@
                         </div>
                         <div class="form-row">
                             <label for="email">Email:</label>
-                            <input type="email" name="email" id="email" placeholder="Enter your email address"
-                                value="<?php if (isset($_POST['email'])) {
-                                    echo htmlspecialchars($_POST['email']);
-                                }
-                                ?>"
-                            >
+                            <input type="email" name="email" id="email" placeholder="Enter your email address">
                         </div>
                         <div class="form-row">
                             <label for="password">Password:</label>
-                            <input type="password" name="password" id="password" placeholder="Enter your password"
-                                value="<?php if (isset($_POST['password'])) {
-                                    echo htmlspecialchars($_POST['password']);
-                                }
-                                ?>"
-                            >
+                            <input type="password" name="password" id="password" placeholder="Enter your password">
                         </div>
                         <div class="form-row">
                             <label for="c_password">Confirm Password:</label>
@@ -67,12 +57,7 @@
                         </div>
                         <div class="form-row">
                             <label for="phone_no">Phone Number:</label>
-                            <input type="tel" name="phone_no" id="phone_no" placeholder="Enter your phone number"
-                                value="<?php if (isset($_POST['phone_no'])) {
-                                    echo htmlspecialchars($_POST['phone_no'], ENT_QUOTES);
-                                }
-                                ?>"
-                            >
+                            <input type="tel" name="phone_no" id="phone_no" placeholder="Enter your phone number">
                         </div>
                         <div class="form-row">
                             <input type="submit" name="submit" id="submit" value="Submit">
