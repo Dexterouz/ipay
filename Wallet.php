@@ -544,5 +544,75 @@
         $messages = array('error' => $errors, 'success' => $success);
         return $messages;
     }
+
+    // get user record
+    public function getUserRec($user_id){
+        // retrieve the user record(s)
+        $user_sql = "SELECT * FROM user WHERE user_id=?";
+        $user_stmt = $this->connect->prepare($user_sql);
+
+        if (isset($user_stmt)) {
+            $user_stmt->bind_param('i', $user_id);
+            $user_stmt->execute();
+            $result = $user_stmt->get_result();
+            $user_row = $result->fetch_assoc();
+        } else {
+            $user_row = '';
+        }
+
+        
+        return $user_row;
+        // close connection to database
+        $user_stmt->close();
+    }
+
+    // function to claim referral bonus
+    public function claim_ref_bonus($ref_id) {
+        $ref_bonus = 5;
+        // first retrieve the referrer wallet balance
+        $ref_wallet_bal_sql = "SELECT user.user_id, user.f_name, user.referrer_id, wallet.user_id, wallet.wallet_id, ";
+        $ref_wallet_bal_sql .= "wallet.wallet_balance FROM user LEFT JOIN wallet ON user.user_id = wallet.user_id ";
+        $ref_wallet_bal_sql .= "WHERE user.referrer_id = ?";
+        // prepare the sql statement
+        $stmt = $this->connect->prepare($ref_wallet_bal_sql);
+        // bind variables to identifier
+        $stmt->bind_param('s', $ref_id);
+        // execute the sq; statement
+        $stmt->execute();
+        // fetch the result of the execution
+        $result = $stmt->get_result();
+        if($result) {
+            // fetch the result in associative array
+            $fetch_row = $result->fetch_assoc();
+            // fetch the balance of the referrer to be updated
+            $balance = $fetch_row['wallet_balance'];
+            // fetch the user id
+            $user_id = $fetch_row['user_id'];
+            // fetch the user wallet id
+            $usr_wallet_id = $fetch_row['wallet_id'];
+
+            // query to update the referrer wallet balance
+            // after the referred user has complete the registeration
+            $add_ref_bonus_sql = "UPDATE wallet SET wallet_balance = ".($balance + $ref_bonus)." WHERE user_id = ?";
+            // prepare sql statement 
+            $stmt = $this->connect->prepare($add_ref_bonus_sql);
+            // bind parameter to identifier
+            $stmt->bind_param('i', $user_id);
+            // execute the statement
+            $stmt->execute();
+
+            // check if the bonus has been added
+            if ($stmt->affected_rows == 1) {
+                // set default datetime zone
+                date_default_timezone_set('Africa/lagos');
+                $date = date('m/d/Y h:i:sa');
+                // report string
+                $report_message = "You have received {$ref_bonus} DXcoin as a referral bonus on {$date}, your current balance is ".($balance + $ref_bonus)." DXcoin";
+                // send the report
+                $this->sendTransactionReport($report_message, $usr_wallet_id, $user_id);
+            }
+        }
+        
+    }
 }
 ?>
