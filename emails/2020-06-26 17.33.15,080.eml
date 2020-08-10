@@ -1,0 +1,11 @@
+Date: Fri, 26 Jun 2020 18:33:15 +0200
+Subject: Email Verification
+To: chuka@yahoo.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome Chukwuka Aniukwu to iPay investment platform, please find
+below for your login credential Email: chuka@yahoo.comPassword:
+1122334455Please click on this link
+localhost/ipay/verify.php?email=chuka@yahoo.com&hash=b8ffdd25380c6a3a8c74be51b4d85ef6234ad85fc
+to verify your email address

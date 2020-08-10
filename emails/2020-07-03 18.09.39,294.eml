@@ -1,0 +1,11 @@
+Date: Fri, 03 Jul 2020 19:09:39 +0200
+Subject: Email Verification
+To: tuned@gmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome tunde ednut to iPay investment platform, please find below for
+your login credential Email: tuned@gmail.com  Password: 12345678Please
+click on this link
+localhost/ipay/verify.php?email=tuned@gmail.com&hash=75d44d00a4165c055a867b20d4db5eff665318ea4
+to verify your email address

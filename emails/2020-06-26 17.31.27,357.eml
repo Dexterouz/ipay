@@ -1,0 +1,14 @@
+Date: Fri, 26 Jun 2020 18:31:27 +0200
+Subject: Email Verification
+To: chuddy@hotmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome Chukwudi Aniukwu to iPay investment platform, please find
+below for your login credential
+-------------------------------------------------Email:
+chuddy@hotmail.comPassword:
+12345678-------------------------------------------------Please click
+on this link
+localhost/ipay/verify.php?email=chuddy@hotmail.com&hash=ac8f7864407965561667b15145e85ef622df291cf
+to verify your email address

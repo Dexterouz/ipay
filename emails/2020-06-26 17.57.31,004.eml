@@ -1,0 +1,11 @@
+Date: Fri, 26 Jun 2020 18:57:31 +0200
+Subject: Email Verification
+To: sentouve@gmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome Ebuka Osuji to iPay investment platform, please find below for
+your login credential Email: sentouve@gmail.com  Password:
+12345678Please click on this link
+localhost/ipay/verify.php?email=sentouve@gmail.com&hash=68b31d3e229368bf7f99deef6e0e5ef628fac62b7
+to verify your email address

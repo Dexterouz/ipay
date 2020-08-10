@@ -1,0 +1,14 @@
+Date: Fri, 26 Jun 2020 18:29:35 +0200
+Subject: Email Verification
+To: method@gmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome Ebuka Egwuchukwu to iPay investment platform, please find
+below for your login credential
+-------------------------------------------------\r\nEmail:
+method@gmail.comPassword:
+12345678-------------------------------------------------\r\nPlease
+click on this link
+localhost/ipay/verify.php?email=method@gmail.com&hash=eddbcde43ade6515a39fdbb90b075ef6226f463e2
+to verify your email address

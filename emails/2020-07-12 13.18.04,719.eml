@@ -1,0 +1,11 @@
+Date: Sun, 12 Jul 2020 14:18:04 +0200
+Subject: Email Verification
+To: elon@aol.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome elon musk to iPay investment platform, please find below for
+your login credential Email: elon@aol.com  Password: 12345678Please
+click on this link
+localhost/ipay/verify.php?email=elon@aol.com&hash=974bcb69dfb9d8658ae92a6254c05f0aff7c7c565
+to verify your email address

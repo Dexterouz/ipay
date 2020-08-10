@@ -1,0 +1,14 @@
+Date: Fri, 26 Jun 2020 18:26:23 +0200
+Subject: Email Verification
+To: amaka@gmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcomechiamaka Egwuchukwu to iPay investment platform, please find
+below for your login credential
+-------------------------------------------------\r\nEmail:
+amaka@gmail.com\r\nPassword:
+12345678\r\n-------------------------------------------------\r\nPlease
+click on this link
+localhost/ipay/verify.php?email=amaka@gmail.com&hash=8d710bc44c65ce6a550e99039a8f5ef621af2f4d4
+to verify your email address

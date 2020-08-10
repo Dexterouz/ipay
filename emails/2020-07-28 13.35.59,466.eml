@@ -1,0 +1,11 @@
+Date: Tue, 28 Jul 2020 14:35:59 +0200
+Subject: Email Verification
+To: dona@aol.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome donatella ninja to iPay investment platform, please find below
+for your login credential Email: dona@aol.com  Password:
+12345678Please click on this link
+localhost/ipay/verify.php?email=dona@aol.com&hash=c45458bb28d58c6567230ab3cbee5f201baf434e4
+to verify your email address

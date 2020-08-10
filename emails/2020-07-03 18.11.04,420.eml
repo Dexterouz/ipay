@@ -1,0 +1,11 @@
+Date: Fri, 03 Jul 2020 19:11:04 +0200
+Subject: Email Verification
+To: xind@hotmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome xin doe to iPay investment platform, please find below for
+your login credential Email: xind@hotmail.com  Password:
+12345678Please click on this link
+localhost/ipay/verify.php?email=xind@hotmail.com&hash=63026c055b32a0b8a3d42364e9e05eff66a833032
+to verify your email address

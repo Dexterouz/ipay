@@ -1,0 +1,11 @@
+Date: Fri, 03 Jul 2020 19:12:57 +0200
+Subject: Email Verification
+To: jonden@aol.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome jon den to iPay investment platform, please find below for
+your login credential Email: jonden@aol.com  Password: 12345678Please
+click on this link
+localhost/ipay/verify.php?email=jonden@aol.com&hash=11cb257d54bf79bd3c3ba06827c05eff6719af930
+to verify your email address

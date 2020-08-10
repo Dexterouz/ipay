@@ -1,0 +1,11 @@
+Date: Sun, 05 Jul 2020 10:18:53 +0200
+Subject: Email Verification
+To: arteze@gmail.com
+From: admin@ipay.com.ng
+Reply-To: admin@ipay.com.ng
+
+Welcome Arthur Eze to iPay investment platform, please find below for
+your login credential Email: arteze@gmail.com  Password:
+12345678Please click on this link
+localhost/ipay/verify.php?email=arteze@gmail.com&hash=fa33ff61b051bccc3b640a6bdb495f018ced5d488
+to verify your email address
