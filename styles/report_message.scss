@@ -14,6 +14,13 @@ $error-type: "#{'Error⊗:'}";
 $success-type: "#{'Success☑:'} ";
 $warning-type: "#{'Warning⚠:'}";
 
+// for block alert
+// message symbol
+$info-alert: "#{'!'}";
+$error-alert: "#{'⊗'}";
+$success-alert: "#{'☑'} ";
+$warning-alert: "#{'⚠'}";
+
 // $display: false;
 
 @mixin message-shared($txt-bdr-Color, $bgColor, $type, $display: true) {
@@ -34,6 +41,32 @@ $warning-type: "#{'Warning⚠:'}";
     background-color: $bgColor;
     border: 1px solid $txt-bdr-Color;
     border-radius: 5px;
+
+    &::before {
+        content: "#{$type} ";
+        font-weight: bold;
+        font-size: 1.08em;
+    }
+}
+
+@mixin alert-msg($txt-bdr-Color, $bgColor, $type, $display: true) {
+    width: auto;
+    @if $display {
+        display: block;
+        @debug "Error in #{$display}";
+    } @else {
+        display: inline-block;
+        @debug "Error in #{$display}";
+    }
+    padding: 15px 0px 15px 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: $txt-bdr-Color;
+    font-weight: bold;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: $bgColor;
+    border-left: 4px solid $txt-bdr-Color;
 
     &::before {
         content: "#{$type} ";
@@ -82,4 +115,18 @@ $warning-type: "#{'Warning⚠:'}";
     }
     .info {
         @include message-shared($dark-blue-info, $light-blue-info, $info-type);
+    }
+
+    // for block alert
+    .alert-error {
+        @include alert-msg($dark-red-error, $light-red-error, $error-alert);
+    }
+    .alert-success {
+        @include alert-msg($dark-green-success, $light-green-success, $success-alert);
+    }
+    .alert-warning {
+        @include alert-msg($dark-gold-warning, $light-gold-warning, $warning-alert);
+    }
+    .alert-info {
+        @include alert-msg($dark-blue-info, $light-blue-info, $info-alert);
     }

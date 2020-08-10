@@ -72,7 +72,7 @@ $black: #000000;
                 .amount {
                     display: block;
                     font-weight: bold;
-                    font-family: $font;
+                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                     font-size: 2.5em;
                     color: #fff;
                     align-self: center;
@@ -182,6 +182,20 @@ $black: #000000;
                 button {
                     @include btn(#0040ff, #fff, true);
                 }
+                .disable {
+                    background-color: lighten($color: #0040ff, $amount: 9);
+                    &:hover {
+                        cursor: not-allowed;
+                        background-color: lighten($color: #0040ff, $amount: 9);
+                    }
+                }
+            }
+            #disp_addr {
+                display: none;
+                text-align:center;
+                padding:5px; 
+                background-color: #fff; 
+                margin-top:3px;
             }
             .action-title {
                 padding: 8px;
@@ -190,15 +204,19 @@ $black: #000000;
                 font-weight: bold;
                 color: #fff;
                 background-color: #000;
-                .status {
+                .pending {
                     padding: 3px;
                     font-family: $font;
                     font-size: 13px;
                     font-weight: normal;
                     border-radius: 4px;
                     text-align: center;
-                    background-color: orangered;
+                    background-color: rgb(226, 135, 8);
                     color: #fff;
+                }
+                .active {
+                    @extend .pending;
+                    background-color: #00e64d;
                 }
             }
         }
@@ -240,4 +258,24 @@ $black: #000000;
         }
     }
 }
+// for referral link bar
+    #ref_link {
+        width:50%; 
+        padding:10px;
+        margin-right: 0; 
+        border: 1px solid #ccc; 
+        border-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    #copy-btn {
+        padding: 10px;
+        margin-left: 0;
+        border: 1px solid #ccc;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        &:hover{
+            cursor: pointer;
+        }
+    }
 }
