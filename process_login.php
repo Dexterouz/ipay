@@ -33,7 +33,7 @@
             include 'DBConnection/mysqli_connect.php';
 
             // select records from database
-            $login_sql = "SELECT user_id, f_name, l_name, email_addr, passwd, account_status "; 
+            $login_sql = "SELECT user_id, f_name, l_name, email_addr, passwd, referrer_id, account_status "; 
             $login_sql .= "FROM user WHERE email_addr = ?";
 
             // initialize statment
@@ -69,6 +69,7 @@
                         $_SESSION['f_name'] = $row[1];
                         $_SESSION['l_name'] = $row[2];
                         $_SESSION['email'] = $row[3];
+                        $_SESSION['ref_id'] = $row[5];
 
                         // dashboard url
                         $url = "member_page/dashboard.php";

@@ -48,7 +48,7 @@
                             <input type="submit" value="Login">
                         </div>
                         <div class="form-row">
-                            <p class="not">Not registered? Click <a href="register.php">Here</a> to register</p>
+                            <p class="not">Forgot your password? Click <a href="forgot.php">Here</a> to register</p>
                         </div>
                     </form>
                 </div>
