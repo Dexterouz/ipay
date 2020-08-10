@@ -2,7 +2,6 @@
     // variable to hold error(s)
     $errors = array();
     $success = array();
-
     // validate the user input from the form
 
     // validate first name
@@ -50,6 +49,12 @@
         $errors[] = "Please enter your phone number";
     } else {
         $phone_no = (filter_var($phone_no, FILTER_SANITIZE_STRING));
+    }
+
+    // check for referral link
+    $referral = trim($_POST['referral']);
+    if (!empty($referral)) {
+        $referral = filter_var($referral, FILTER_SANITIZE_STRING);
     }
 
     // to generate referrer id
@@ -103,7 +108,7 @@
                 mysqli_stmt_execute($insert_rec_stmt);
 
                 // check if the rows are affected
-                // if true, redirect to message page
+                // if true, report success message
                 // if false, report error
                 if (mysqli_stmt_affected_rows($insert_rec_stmt) == 1) {
                     // report success message
@@ -118,6 +123,19 @@
                         $headers = 'From: admin@ipay.com.ng'."\r\n".'Reply-To: admin@ipay.com.ng'."\r\n";
                         // send mail
                         $send = mail($recipient, $subject, $message, $headers);
+
+                        // check for referral link
+                        if (isset($referral)) {
+                            // call the function for referral bonus
+                            require 'Wallet.php';
+                            // instantiate the class 'Wallet'
+                            $ref_bonus = new Wallet();
+                            // call the 'claim_ref_bonus' function
+                            $ref_bonus->claim_ref_bonus($referral);
+                            
+                        } else {
+                            echo "error";
+                        }
                 } else {
                     // report error message
                     $errors[] = "<b>Registeration Fail!</br> due to system error, we apologise for the incovenience";

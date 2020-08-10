@@ -63,6 +63,9 @@
                             <input type="submit" name="submit" id="submit" value="Submit">
                         </div>
                         <div class="form-row">
+                            <input type="hidden" name="referral" value="<?=isset($_GET['referral']) ? $_GET['referral'] : '';?>">
+                        </div>
+                        <div class="form-row">
                             <p class="not">Already Registered? Click <a href="login.php">Here</a> to login</p>
                         </div>
                     </form>
