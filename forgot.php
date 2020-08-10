@@ -68,13 +68,15 @@
                         // check if it has been sent
                         if ($send) {
                             // report message
-                            $success[] = "A mail has been sent to email address you provided";
+                            $success[] = "A mail has been sent to your email address";
                         } else {
                             $errors[] = "Failed to send mail";
                         }
                     } else {
                         $errors[] = "An error has occured";
                     }
+                } else {
+                    $success[] = "We will get back to you";
                 }
             }
         } catch (Exception $e) {
@@ -103,14 +105,14 @@
                         // for reporting error message(s)
                         if (isset($errors)) {
                             foreach ($errors as $error) {
-                                echo '<span class="error">'.$error.'</span>';
+                                echo '<span class="alert-error">'.$error.'</span>';
                             }
                         }
 
                         // for reporting warning message(s)
                         if (isset($success)) {
                             foreach ($success as $successMsg) {
-                                echo '<span class="success">'.$successMsg.'</span>';
+                                echo '<span class="alert-success">'.$successMsg.'</span>';
                             }
                         }
                         ?>    
