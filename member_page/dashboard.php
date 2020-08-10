@@ -5,7 +5,6 @@
     $user_f_name = ($_SESSION['f_name']);
     $user_l_name = ($_SESSION['l_name']);
     $user_email = ($_SESSION['email']);
-    // $user_ref_link = ($_SESSION['ref_id']);
 
     // if user_id and email is not set
     // redirect user to login page
@@ -312,7 +311,7 @@
                             <?php $get_report = $wallet->retrieveTransReport($wallet_rec['wallet_id']);?>
                             <details>
                                 <?php $i = 0; if(isset($get_report)){foreach($get_report as $report) { $i++; }}?>
-                                <summary>Messages <sup class="mail-count"><?=$i;?></sup></summary>
+                                <summary style="cursor: pointer;">Messages <sup class="mail-count"><?=$i;?></sup></summary>
                                 <?php if(isset($get_report)) :?>
                                 <?php foreach($get_report as $report) : ?>
                                 <p><?=$report['wallet_mails'];?><button type="button" onclick="location.href='<?=$_SERVER['PHP_SELF'];?>?delete=<?=$report['wallet_mail_id'];?>'">&times;</button></p>
